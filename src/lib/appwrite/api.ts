@@ -243,6 +243,58 @@ export async function deleteFile(fileId: string) {
 }
 
 /**
+ * Search Posts
+ * @param searchTerm
+ * @returns
+ */
+export async function searchPosts(searchTerm: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      [Query.search("caption", searchTerm)]
+    );
+
+    console.log(posts);
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/**
+ * Get Infinite Posts
+ * @param param0
+ * @returns
+ */
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+  const queries: string[] = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
+
+    console.log(posts);
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/**
  * Get post accroding to id
  * @param postId
  * @returns
