@@ -335,6 +335,27 @@ export async function getRecentPosts() {
   }
 }
 
+/**
+ * Get user saved posts
+ * @param userId
+ * @returns
+ */
+export async function getSavedPosts(userId: string) {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      [Query.equal("user", userId)]
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function updatePost(post: IUpdatePost) {
   const hasFileToUpdate = post.file.length > 0;
 

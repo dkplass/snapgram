@@ -15,6 +15,7 @@ import {
   getInfinitePosts,
   getPostById,
   getRecentPosts,
+  getSavedPosts,
   getUserById,
   getUsers,
   likePost,
@@ -98,6 +99,13 @@ export const useGetRecentPosts = () => {
   });
 };
 
+export const useGetSavedPosts = (userId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_POSTS],
+    queryFn: () => getSavedPosts(userId),
+  });
+};
+
 export const useGetPostById = (postId?: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID],
@@ -176,6 +184,9 @@ export const useSavePost = () => {
       });
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_SAVED_POSTS],
       });
     },
   });
